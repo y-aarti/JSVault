@@ -2,7 +2,7 @@ let template;
 
 async function loadTemplate() {
   if (!template) {
-    const response = await fetch('/components/card/card.html', {
+    const response = await fetch('components/card/card.html', {
       cache: 'no-store',
     });
 
