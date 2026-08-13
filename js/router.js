@@ -2,12 +2,12 @@ import { initHome } from '../pages/home/home.js';
 
 const routes = {
   '/home': {
-    html: '/pages/home/home.html',
+    html: 'pages/home/home.html',
     init: initHome,
   },
 
   '/execution-context': {
-    html: '/pages/execution-context/execution-context.html',
+    html: 'pages/execution-context/execution-context.html',
   },
 };
 

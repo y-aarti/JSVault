@@ -3,9 +3,9 @@ import { initSidebar } from './components/sidebar/sidebar.js';
 import { initRouter } from './js/router.js';
 
 async function init() {
-  const sidebar = await loadComponent('/components/sidebar/sidebar.html');
+  const sidebar = await loadComponent('components/sidebar/sidebar.html');
   const content = await loadComponent(
-    '/pages/execution-context/execution-context.html',
+    'pages/execution-context/execution-context.html',
   );
   const main = `<main class="main">
   <header class="main__header"></header>
