@@ -1,6 +1,6 @@
-@import url('../components/sidebar/sidebar.css');
-@import url('../components/card/card.css');
-@import url('../pages/home/home.css');
+@import url("components/sidebar/sidebar.css");
+@import url("components/card/card.css");
+@import url("pages/home/home.css");
 
 /* ========================================
    App Layout
