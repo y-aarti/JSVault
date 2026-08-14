@@ -1,0 +1,762 @@
+/* ========================================
+   CALL STACK
+======================================== */
+
+.call-stack {
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #343b52;
+  border-radius: 14px;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(124, 58, 237, 0.08),
+      transparent 35%
+    ),
+    #0d1018;
+
+  color: #eef2ff;
+
+  overflow: hidden;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.call-stack__header {
+  min-height: 64px;
+
+  padding: 11px 16px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124, 58, 237, 0.08),
+      rgba(37, 99, 235, 0.04),
+      transparent
+    );
+
+  border-bottom: 1px solid #292f42;
+}
+
+
+.call-stack__label {
+  font-size: 10px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.12em;
+
+  color: #8b93aa;
+}
+
+
+.call-stack__title {
+  margin: 4px 0 0;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: #f8fafc;
+}
+
+
+.call-stack__step-counter {
+  padding: 6px 10px;
+
+  border: 1px solid #343b52;
+
+  border-radius: 7px;
+
+  background: #151a26;
+
+  font-size: 12px;
+
+  color: #9da6bb;
+}
+
+
+.call-stack__current-step {
+  color: #ffffff;
+
+  font-weight: 700;
+}
+
+
+.call-stack__total-steps {
+  color: #7f89a1;
+}
+
+
+/* ========================================
+   BODY
+======================================== */
+
+.call-stack__body {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.3fr)
+    minmax(300px, 0.7fr);
+
+  min-height: 420px;
+}
+
+
+/* ========================================
+   SOURCE CODE
+======================================== */
+
+.call-stack__code-section {
+  min-width: 0;
+
+  background: #0b0e15;
+
+  border-right: 1px solid #292f42;
+}
+
+
+.call-stack__section-title {
+  height: 32px;
+
+  box-sizing: border-box;
+
+  padding: 9px 12px 7px;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  color: #7f89a1;
+
+  background: #10141e;
+
+  border-bottom: 1px solid #292f42;
+}
+
+
+.call-stack__code {
+  width: 100%;
+
+  padding: 10px 0;
+
+  box-sizing: border-box;
+
+  font-family:
+    "SFMono-Regular",
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  overflow: hidden;
+}
+
+
+/* ========================================
+   CODE LINE
+======================================== */
+
+.call-stack__code-line {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns: 44px minmax(0, 1fr);
+
+  align-items: center;
+
+  min-height: 27px;
+
+  box-sizing: border-box;
+
+  padding: 1px 12px 1px 0;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+
+.call-stack__line-number {
+  text-align: right;
+
+  padding-right: 12px;
+
+  font-size: 11px;
+
+  color: #525b72;
+
+  user-select: none;
+}
+
+
+.call-stack__line-content {
+  display: block;
+
+  white-space: pre;
+
+  color: #d8deed;
+
+  font-family: inherit;
+}
+
+
+/* ========================================
+   ACTIVE CODE LINE
+======================================== */
+
+.call-stack__code-line--active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(250, 204, 21, 0.18),
+      rgba(250, 204, 21, 0.07),
+      transparent
+    );
+
+  transform: scale(1.015);
+
+  transform-origin: left center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(250, 204, 21, 0.08),
+    inset 0 -1px 0 rgba(250, 204, 21, 0.05);
+}
+
+
+.call-stack__code-line--active::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0;
+  bottom: 0;
+
+  width: 4px;
+
+  background: linear-gradient(
+    180deg,
+    #fde047,
+    #facc15
+  );
+
+  box-shadow:
+    0 0 10px rgba(250, 204, 21, 0.45);
+
+  border-radius: 0 3px 3px 0;
+}
+
+
+.call-stack__code-line--active
+.call-stack__line-number {
+  color: #fde047;
+
+  font-weight: 700;
+}
+
+
+.call-stack__code-line--active
+.call-stack__line-content {
+  color: #fff7cc;
+
+  font-weight: 500;
+}
+
+
+/* ========================================
+   VISUALIZATION
+======================================== */
+
+.call-stack__visual-section {
+  min-width: 0;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(37, 99, 235, 0.07),
+      transparent 40%
+    );
+}
+
+
+/* ========================================
+   PHASE
+======================================== */
+
+.call-stack__phase {
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.07em;
+
+  text-transform: uppercase;
+
+  background: #1c2230;
+
+  color: #b9c1d5;
+
+  border: 1px solid #353c51;
+}
+
+
+/* Creation Phase */
+
+.call-stack__phase--creation {
+  color: #c4b5fd;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.22),
+      rgba(139, 92, 246, 0.08)
+    );
+
+  border-color: rgba(139, 92, 246, 0.4);
+
+  box-shadow:
+    0 0 18px rgba(139, 92, 246, 0.08);
+}
+
+
+/* Execution Phase */
+
+.call-stack__phase--execution {
+  color: #86efac;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(16, 185, 129, 0.20),
+      rgba(34, 197, 94, 0.07)
+    );
+
+  border-color: rgba(34, 197, 94, 0.35);
+
+  box-shadow:
+    0 0 18px rgba(34, 197, 94, 0.07);
+}
+
+
+/* ========================================
+   STEP TITLE
+======================================== */
+
+.call-stack__step-title {
+  margin: 0;
+
+  font-size: 16px;
+
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  color: #f8fafc;
+}
+
+
+/* ========================================
+   DETAILS
+======================================== */
+
+.call-stack__details {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 9px 11px;
+
+  border-left: 3px solid #6366f1;
+
+  border-radius: 0 7px 7px 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(99, 102, 241, 0.10),
+      rgba(99, 102, 241, 0.025),
+      transparent
+    );
+}
+
+
+.call-stack__detail {
+  font-size: 12px;
+
+  line-height: 1.45;
+
+  color: #aeb7ca;
+}
+
+
+/* ========================================
+   PANELS
+======================================== */
+
+.call-stack__panel {
+  border: 1px solid #30374b;
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #151a26,
+      #10141d
+    );
+
+  overflow: hidden;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+.call-stack__panel-title {
+  padding: 8px 10px;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+
+  color: #8f99b0;
+
+  background: #181e2b;
+
+  border-bottom: 1px solid #30374b;
+}
+
+
+/* ========================================
+   CALL STACK
+======================================== */
+
+.call-stack__stack {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 8px;
+}
+
+
+.call-stack__stack-item {
+  position: relative;
+
+  padding: 7px 9px;
+
+  border: 1px solid #30374b;
+
+  border-radius: 5px;
+
+  background: #1a2030;
+
+  font-family:
+    "SFMono-Regular",
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 12px;
+
+  color: #b8c1d5;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+/* Active stack frame */
+
+.call-stack__stack-item--active {
+  border-color: rgba(59, 130, 246, 0.65);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.22),
+      rgba(59, 130, 246, 0.08)
+    );
+
+  color: #dbeafe;
+
+  font-weight: 700;
+
+  box-shadow:
+    0 0 15px rgba(59, 130, 246, 0.08);
+}
+
+
+.call-stack__stack-item--active::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0;
+  bottom: 0;
+
+  width: 3px;
+
+  background: #60a5fa;
+
+  border-radius: 3px 0 0 3px;
+
+  box-shadow:
+    0 0 8px rgba(96, 165, 250, 0.4);
+}
+
+
+/* Empty stack */
+
+.call-stack__empty {
+  padding: 9px;
+
+  font-size: 12px;
+
+  color: #69738a;
+
+  text-align: center;
+}
+
+
+/* ========================================
+   ENVIRONMENT
+======================================== */
+
+.call-stack__environment {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding: 8px;
+}
+
+
+.call-stack__environment-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 4px 6px;
+
+  border-radius: 4px;
+
+  background: rgba(236, 72, 153, 0.04);
+
+  font-family:
+    "SFMono-Regular",
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 12px;
+}
+
+
+.call-stack__environment-key {
+  color: #f0abfc;
+
+  font-weight: 600;
+}
+
+
+.call-stack__environment-arrow {
+  color: #6b7280;
+}
+
+
+.call-stack__environment-value {
+  color: #a5b4fc;
+}
+
+
+.call-stack__environment-empty {
+  padding: 9px;
+
+  font-size: 12px;
+
+  color: #69738a;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.call-stack__footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  padding: 9px 12px;
+
+  border-top: 1px solid #292f42;
+
+  background: #10141d;
+}
+
+
+/* ========================================
+   NEXT BUTTON
+======================================== */
+
+.call-stack__next {
+  border: 0;
+
+  border-radius: 7px;
+
+  padding: 7px 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #facc15,
+      #f59e0b
+    );
+
+  color: #17130a;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(245, 158, 11, 0.18);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+}
+
+
+.call-stack__next:hover {
+  transform: translateY(-1px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 6px 18px rgba(245, 158, 11, 0.28);
+}
+
+
+.call-stack__next:active {
+  transform: translateY(0);
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 900px) {
+  .call-stack__body {
+    grid-template-columns: 1fr;
+  }
+
+  .call-stack__code-section {
+    border-right: 0;
+
+    border-bottom: 1px solid #292f42;
+  }
+
+  .call-stack__visual-section {
+    padding: 12px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .call-stack__header {
+    padding: 10px 12px;
+  }
+
+  .call-stack__body {
+    min-height: auto;
+  }
+
+  .call-stack__code {
+    font-size: 12px;
+  }
+
+  .call-stack__visual-section {
+    gap: 8px;
+  }
+
+  .call-stack__step-title {
+    font-size: 14px;
+  }
+}

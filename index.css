@@ -1,7 +1,9 @@
 @import url("components/sidebar/sidebar.css");
 @import url("components/card/card.css");
 @import url("components/code-block/code-block.css");
+@import url("components/call-stack/call-stack.css");
 @import url("pages/home/home.css");
+@import url("pages/execution-context/execution-context.css");
 
 /* ========================================
    App Layout

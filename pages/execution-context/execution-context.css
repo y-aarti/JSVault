@@ -1,0 +1,365 @@
+/* ========================================
+   EXECUTION CONTEXT PAGE
+======================================== */
+
+.execution-context {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 28px 32px 60px;
+
+  box-sizing: border-box;
+
+  color: #eef2ff;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.execution-context__header {
+  margin-bottom: 22px;
+}
+
+
+.execution-context__eyebrow {
+  display: inline-block;
+
+  margin-bottom: 7px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+
+  color: #a78bfa;
+}
+
+
+.execution-context__header h1 {
+  margin: 0;
+
+  font-size: 30px;
+  line-height: 1.15;
+
+  font-weight: 750;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffffff,
+      #c4b5fd
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+
+.execution-context__header p {
+  max-width: 680px;
+
+  margin: 8px 0 0;
+
+  font-size: 14px;
+  line-height: 1.55;
+
+  color: #8f99ad;
+}
+
+
+/* ========================================
+   CONCEPT CARDS
+======================================== */
+
+.execution-context__concepts {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin-bottom: 26px;
+}
+
+
+.execution-context__concept {
+  position: relative;
+
+  display: flex;
+
+  gap: 12px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #2d3447;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24, 29, 42, 0.95),
+      rgba(14, 17, 25, 0.95)
+    );
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+
+
+.execution-context__concept::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  width: 3px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #8b5cf6,
+      #3b82f6
+    );
+}
+
+
+.execution-context__concept:nth-child(2)::before {
+  background:
+    linear-gradient(
+      180deg,
+      #22c55e,
+      #14b8a6
+    );
+}
+
+
+.execution-context__concept:nth-child(3)::before {
+  background:
+    linear-gradient(
+      180deg,
+      #3b82f6,
+      #06b6d4
+    );
+}
+
+
+.execution-context__concept:hover {
+  transform: translateY(-2px);
+
+  border-color: #414b65;
+}
+
+
+/* ========================================
+   CONCEPT NUMBER
+======================================== */
+
+.execution-context__concept > span {
+  flex-shrink: 0;
+
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+
+  background: #1c2231;
+
+  color: #a78bfa;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+.execution-context__concept:nth-child(2) > span {
+  color: #6ee7a0;
+}
+
+
+.execution-context__concept:nth-child(3) > span {
+  color: #67e8f9;
+}
+
+
+/* ========================================
+   CONCEPT CONTENT
+======================================== */
+
+.execution-context__concept h2 {
+  margin: 1px 0 4px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #f1f5f9;
+}
+
+
+.execution-context__concept p {
+  margin: 0;
+
+  font-size: 11px;
+  line-height: 1.45;
+
+  color: #8791a6;
+}
+
+
+/* ========================================
+   LESSON
+======================================== */
+
+.execution-context__lesson {
+  width: 100%;
+
+  border: 1px solid #30374b;
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18, 22, 32, 0.98),
+      rgba(11, 14, 21, 0.98)
+    );
+
+  overflow: hidden;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.16);
+}
+
+
+/* ========================================
+   LESSON HEADER
+======================================== */
+
+.execution-context__lesson-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #292f42;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124, 58, 237, 0.07),
+      rgba(37, 99, 235, 0.03),
+      transparent
+    );
+}
+
+
+.execution-context__lesson-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+
+  color: #8b93aa;
+}
+
+
+.execution-context__lesson-header h2 {
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  color: #f8fafc;
+}
+
+
+.execution-context__lesson-hint {
+  flex-shrink: 0;
+
+  padding: 5px 8px;
+
+  border-radius: 5px;
+
+  background: rgba(250, 204, 21, 0.08);
+
+  border: 1px solid rgba(250, 204, 21, 0.18);
+
+  color: #fde68a;
+
+  font-size: 10px;
+}
+
+
+/* ========================================
+   CALL STACK CONTAINER
+======================================== */
+
+#code-example {
+  width: 100%;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 950px) {
+  .execution-context {
+    padding: 22px 20px 45px;
+  }
+
+  .execution-context__concepts {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .execution-context {
+    padding: 18px 14px 35px;
+  }
+
+  .execution-context__header h1 {
+    font-size: 25px;
+  }
+
+  .execution-context__header p {
+    font-size: 13px;
+  }
+
+  .execution-context__lesson-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
+  }
+}

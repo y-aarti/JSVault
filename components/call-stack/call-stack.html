@@ -1,0 +1,95 @@
+<div class="call-stack">
+
+  <header class="call-stack__header">
+
+    <div class="call-stack__header-info">
+
+      <div class="call-stack__title">
+        JavaScript Execution
+      </div>
+
+      <div class="call-stack__step">
+        Step
+        <span class="call-stack__current-step">0</span>
+        /
+        <span class="call-stack__total-steps">0</span>
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      class="call-stack__next"
+      aria-label="Execute next step"
+    >
+      Next →
+    </button>
+
+  </header>
+
+
+  <div class="call-stack__body">
+
+    <!-- ================================
+         CODE
+    ================================= -->
+
+    <section class="call-stack__code">
+
+      <div class="call-stack__section-title">
+        JavaScript
+      </div>
+
+      <div class="call-stack__code-content">
+        {{code}}
+      </div>
+
+    </section>
+
+
+    <!-- ================================
+         CALL STACK
+    ================================= -->
+
+    <section class="call-stack__visual">
+
+      <div class="call-stack__section-title">
+        Call Stack
+      </div>
+
+      <div class="call-stack__stack"></div>
+
+    </section>
+
+  </div>
+
+
+  <!-- ================================
+       DETAILS
+  ================================= -->
+
+  <section class="call-stack__details">
+
+    <div class="call-stack__details-header">
+
+      <span class="call-stack__details-icon">
+        💡
+      </span>
+
+      <span>
+        What's happening?
+      </span>
+
+    </div>
+
+    <div class="call-stack__details-content">
+
+      <div class="call-stack__event-title"></div>
+
+      <ul class="call-stack__event-details"></ul>
+
+    </div>
+
+  </section>
+
+</div>

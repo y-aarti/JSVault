@@ -1,11 +1,19 @@
 let template;
+let audioContext;
 
 async function loadTemplate() {
   if (!template) {
-    const response = await fetch('components/code-block/code-block.html');
+    const response = await fetch(
+      "/components/code-block/code-block.html",
+      {
+        cache: "no-store",
+      },
+    );
 
     if (!response.ok) {
-      throw new Error('Failed to load code block template');
+      throw new Error(
+        "Failed to load code-block.html",
+      );
     }
 
     template = await response.text();
@@ -14,52 +22,26 @@ async function loadTemplate() {
   return template;
 }
 
-function playLineSound() {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
+/* ========================================
+   HTML ESCAPE
+======================================== */
 
-  if (!AudioContext) {
-    return;
-  }
-
-  const audioContext = new AudioContext();
-
-  const oscillator = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-
-  oscillator.type = 'sine';
-
-  oscillator.frequency.setValueAtTime(700, audioContext.currentTime);
-
-  oscillator.frequency.exponentialRampToValueAtTime(
-    400,
-    audioContext.currentTime + 0.06,
-  );
-
-  gain.gain.setValueAtTime(0.08, audioContext.currentTime);
-
-  gain.gain.exponentialRampToValueAtTime(
-    0.001,
-    audioContext.currentTime + 0.06,
-  );
-
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-
-  oscillator.start();
-
-  oscillator.stop(audioContext.currentTime + 0.06);
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-function escapeHtml(code) {
-  return code
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
-}
+/* ========================================
+   CREATE CODE LINES
+======================================== */
 
 function createLines(code) {
   return code
-    .split('\n')
+    .split("\n")
     .map(
       (line, index) => `
         <div
@@ -76,82 +58,374 @@ function createLines(code) {
         </div>
       `,
     )
-    .join('');
+    .join("");
 }
 
-export async function createCodeBlock({ code, language = 'javascript' }) {
-  const html = await loadTemplate();
+/* ========================================
+   LINE SOUND
+======================================== */
 
-  const codeBlockHtml = html
-    .replace('{{language}}', language)
-    .replace('{{code}}', createLines(code));
+function playLineSound() {
+  const AudioContext =
+    window.AudioContext ||
+    window.webkitAudioContext;
 
-  const wrapper = document.createElement('div');
+  if (!AudioContext) {
+    return;
+  }
 
-  wrapper.innerHTML = codeBlockHtml.trim();
+  if (!audioContext) {
+    audioContext = new AudioContext();
+  }
 
-  const codeBlock = wrapper.firstElementChild;
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
 
-  const lineElements = [...codeBlock.querySelectorAll('.code-block__line')];
+  const oscillator =
+    audioContext.createOscillator();
 
-  const previousButton = codeBlock.querySelector('.code-block__previous');
+  const gain =
+    audioContext.createGain();
 
-  const nextButton = codeBlock.querySelector('.code-block__next');
+  oscillator.type = "sine";
 
-  const copyButton = codeBlock.querySelector('.code-block__copy');
-
-  const currentLineElement = codeBlock.querySelector(
-    '.code-block__current-line',
+  oscillator.frequency.setValueAtTime(
+    700,
+    audioContext.currentTime,
   );
 
-  const totalLinesElement = codeBlock.querySelector('.code-block__total-lines');
+  oscillator.frequency.exponentialRampToValueAtTime(
+    400,
+    audioContext.currentTime + 0.06,
+  );
+
+  gain.gain.setValueAtTime(
+    0.08,
+    audioContext.currentTime,
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    audioContext.currentTime + 0.06,
+  );
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+
+  oscillator.start();
+
+  oscillator.stop(
+    audioContext.currentTime + 0.06,
+  );
+}
+
+/* ========================================
+   CREATE CODE BLOCK
+======================================== */
+
+export async function createCodeBlock({
+  code,
+  language = "javascript",
+  speed = 900,
+}) {
+  const html = await loadTemplate();
+
+  const codeHtml = createLines(code);
+
+  const blockHtml = html
+    .replaceAll(
+      "{{language}}",
+      escapeHtml(language),
+    )
+    .replace("{{code}}", codeHtml);
+
+  const wrapper = document.createElement("div");
+
+  wrapper.innerHTML = blockHtml.trim();
+
+  const component = wrapper.firstElementChild;
+
+  if (!component) {
+    throw new Error(
+      "Failed to create code block.",
+    );
+  }
+
+  /* ========================================
+     ELEMENTS
+  ======================================== */
+
+  const lineElements = [
+    ...component.querySelectorAll(
+      ".code-block__line",
+    ),
+  ];
+
+  const previousButton =
+    component.querySelector(
+      ".code-block__previous",
+    );
+
+  const nextButton =
+    component.querySelector(
+      ".code-block__next",
+    );
+
+  const playButton =
+    component.querySelector(
+      ".code-block__play",
+    );
+
+  const copyButton =
+    component.querySelector(
+      ".code-block__copy",
+    );
+
+  const currentLineElement =
+    component.querySelector(
+      ".code-block__current-line",
+    );
+
+  const totalLinesElement =
+    component.querySelector(
+      ".code-block__total-lines",
+    );
+
+  /* ========================================
+     STATE
+  ======================================== */
 
   let currentLine = 1;
 
-  totalLinesElement.textContent = lineElements.length;
+  let isPlaying = false;
+
+  let playTimer = null;
+
+  /* ========================================
+     TOTAL LINES
+  ======================================== */
+
+  totalLinesElement.textContent =
+    lineElements.length;
+
+  /* ========================================
+     UPDATE LINE
+  ======================================== */
 
   function updateLine() {
     lineElements.forEach((line) => {
+      const lineNumber = Number(
+        line.dataset.line,
+      );
+
       line.classList.toggle(
-        'code-block__line--active',
-        Number(line.dataset.line) === currentLine,
+        "code-block__line--active",
+        lineNumber === currentLine,
       );
     });
 
-    currentLineElement.textContent = currentLine;
+    currentLineElement.textContent =
+      currentLine;
 
-    previousButton.disabled = currentLine === 1;
+    previousButton.disabled =
+      currentLine === 1;
 
-    nextButton.disabled = currentLine === lineElements.length;
+    nextButton.disabled =
+      currentLine === lineElements.length;
   }
 
-  previousButton.addEventListener('click', () => {
-    if (currentLine > 1) {
-      currentLine -= 1;
-      playLineSound();
-      updateLine();
-    }
-  });
+  /* ========================================
+     STOP PLAYBACK
+  ======================================== */
 
-  nextButton.addEventListener('click', () => {
-    if (currentLine < lineElements.length) {
+  function stopPlaying() {
+    isPlaying = false;
+
+    clearTimeout(playTimer);
+
+    playTimer = null;
+
+    playButton.textContent = "▶";
+
+    playButton.title = "Play";
+
+    playButton.classList.remove(
+      "code-block__play--playing",
+    );
+  }
+
+  /* ========================================
+     PLAY NEXT LINE
+  ======================================== */
+
+  function playNextLine() {
+    if (!isPlaying) {
+      return;
+    }
+
+    if (
+      currentLine >=
+      lineElements.length
+    ) {
+      stopPlaying();
+
+      return;
+    }
+
+    playTimer = setTimeout(() => {
+      if (!isPlaying) {
+        return;
+      }
+
       currentLine += 1;
+
       playLineSound();
+
       updateLine();
+
+      playNextLine();
+    }, speed);
+  }
+
+  /* ========================================
+     PLAY / PAUSE
+  ======================================== */
+
+  function togglePlay() {
+    if (isPlaying) {
+      stopPlaying();
+
+      return;
     }
-  });
 
-  copyButton.addEventListener('click', async () => {
-    await navigator.clipboard.writeText(code);
+    /*
+     * Start from the beginning
+     */
 
-    copyButton.textContent = 'Copied!';
+    currentLine = 1;
 
-    setTimeout(() => {
-      copyButton.textContent = 'Copy';
-    }, 1500);
-  });
+    isPlaying = true;
+
+    playButton.textContent = "⏸";
+
+    playButton.title = "Pause";
+
+    playButton.classList.add(
+      "code-block__play--playing",
+    );
+
+    playLineSound();
+
+    updateLine();
+
+    playNextLine();
+  }
+
+  /* ========================================
+     PREVIOUS
+  ======================================== */
+
+  previousButton.addEventListener(
+    "click",
+    () => {
+      /*
+       * Stop autoplay when manually
+       * navigating.
+       */
+
+      if (isPlaying) {
+        stopPlaying();
+      }
+
+      if (currentLine <= 1) {
+        return;
+      }
+
+      currentLine -= 1;
+
+      playLineSound();
+
+      updateLine();
+    },
+  );
+
+  /* ========================================
+     NEXT
+  ======================================== */
+
+  nextButton.addEventListener(
+    "click",
+    () => {
+      /*
+       * Stop autoplay when manually
+       * navigating.
+       */
+
+      if (isPlaying) {
+        stopPlaying();
+      }
+
+      if (
+        currentLine >=
+        lineElements.length
+      ) {
+        return;
+      }
+
+      currentLine += 1;
+
+      playLineSound();
+
+      updateLine();
+    },
+  );
+
+  /* ========================================
+     PLAY BUTTON
+  ======================================== */
+
+  playButton.addEventListener(
+    "click",
+    togglePlay,
+  );
+
+  /* ========================================
+     COPY
+  ======================================== */
+
+  copyButton.addEventListener(
+    "click",
+    async () => {
+      try {
+        await navigator.clipboard.writeText(
+          code,
+        );
+
+        const originalText =
+          copyButton.textContent;
+
+        copyButton.textContent =
+          "Copied!";
+
+        setTimeout(() => {
+          copyButton.textContent =
+            originalText;
+        }, 1200);
+      } catch (error) {
+        console.error(
+          "Failed to copy code:",
+          error,
+        );
+      }
+    },
+  );
+
+  /* ========================================
+     INITIAL STATE
+  ======================================== */
 
   updateLine();
 
-  return codeBlock;
+  return component;
 }

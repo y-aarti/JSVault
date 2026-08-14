@@ -222,3 +222,16 @@
   color: var(--text-primary);
   font-weight: 600;
 }
+
+.code-block__play {
+  color: var(--text-primary) !important;
+}
+
+.code-block__play:hover {
+  background: rgba(255, 193, 7, 0.12) !important;
+  color: #f5c542 !important;
+}
+
+.code-block__play--playing {
+  color: #f5c542 !important;
+}
