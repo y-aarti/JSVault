@@ -1,4 +1,5 @@
 import { initHome } from '../pages/home/home.js';
+import { initExecutionContext } from '../pages/execution-context/execution-context.js';
 
 const routes = {
   '/home': {
@@ -8,6 +9,7 @@ const routes = {
 
   '/execution-context': {
     html: 'pages/execution-context/execution-context.html',
+    init: initExecutionContext,
   },
 };
 

@@ -1,0 +1,43 @@
+<div class="code-block">
+  <div class="code-block__header">
+    <span class="code-block__language">{{language}}</span>
+
+    <div class="code-block__actions">
+      <button
+        class="code-block__previous"
+        type="button"
+        aria-label="Previous line"
+      >
+        ←
+      </button>
+
+      <span class="code-block__line-indicator">
+        <span class="code-block__current-line">1</span>
+        /
+        <span class="code-block__total-lines">1</span>
+      </span>
+
+      <button
+        class="code-block__next"
+        type="button"
+        aria-label="Next line"
+      >
+        →
+      </button>
+
+      <button
+        class="code-block__copy"
+        type="button"
+        aria-label="Copy code"
+      >
+        Copy
+      </button>
+    </div>
+  </div>
+
+  <div class="code-block__body">
+    <div class="code-block__lines">
+      {{code}}
+    </div>
+  </div>
+</div>
